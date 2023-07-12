@@ -13,7 +13,7 @@ import * as tokenManager from '../../../lib/tokenManager';
 let createuser = async function (payload) {
     try {
         let {user_name,password} = payload;
-
+        // find user in table 
         let finduser = await DatabaseDao.findOne(Users, {
             where: { user_name: user_name }
         });
@@ -27,7 +27,7 @@ let createuser = async function (payload) {
     
             await DatabaseDao.create(Users,userData);
             
-        } else {
+        } else {   //if use found return error user exists
             return { ...MESSAGES.SUCCESS.USER_EXIST}
         }
 
@@ -42,7 +42,7 @@ let createuser = async function (payload) {
 let loginuser = async function (payload) {
     try {
         let {user_name} = payload;
-
+        // store value in redis to check for session or we can de with JWT token also
         await redisCli.storeValue( `${user_name}`, true);
         //await redisCli.expireKey(`${user_name}`, 3600);
 
